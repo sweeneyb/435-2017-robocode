@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class DriveForward extends Command {
 
-	private int speed;
+	private double speed;
 	
-    public DriveForward(int speed, int time) {
+    public DriveForward(double speed, double time) {
         this.speed = speed;
         setTimeout(time);
         requires(Robot.driveTrain);

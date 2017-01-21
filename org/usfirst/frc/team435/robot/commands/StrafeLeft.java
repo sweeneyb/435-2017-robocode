@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class StrafeLeft extends Command {
 
-	private int speed;
+	private double speed;
 	
-    public StrafeLeft(int speed, int time) {
+    public StrafeLeft(double speed, double time) {
         this.speed = speed;
         setTimeout(time);
         requires(Robot.driveTrain);

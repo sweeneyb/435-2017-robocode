@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class TurnLeft extends Command {
 
-	private int speed;
+	private double speed;
 	
-    public TurnLeft(int speed, int time) {
+    public TurnLeft(double speed, double time) {
         this.speed = speed;
         setTimeout(time);
         requires(Robot.driveTrain);

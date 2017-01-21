@@ -100,8 +100,6 @@ public class Robot extends IterativeRobot {
 	 */
     public void autonomousInit() {
         autonomousCommand1 = (Command) chooser.getSelected();
-        
-        RobotMap.robotDrive.setSafetyEnabled(false);
 		
 		try {
 			autonomousCommand1 = (Command) chooser.getSelected();
