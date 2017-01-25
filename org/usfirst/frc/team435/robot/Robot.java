@@ -3,6 +3,9 @@ package org.usfirst.frc.team435.robot;
 
 import static org.usfirst.frc.team435.robot.RobotMap.robotDrive;
 
+import org.usfirst.frc.team435.robot.Automodes.DefaultAuto;
+import org.usfirst.frc.team435.robot.Automodes.LeftFieldAuto;
+import org.usfirst.frc.team435.robot.Automodes.RightFieldAuto;
 import org.usfirst.frc.team435.robot.subsystems.BoardingMechanism;
 import org.usfirst.frc.team435.robot.subsystems.DriveTrain;
 
@@ -66,8 +69,9 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		RobotMap.init();
         chooser = new SendableChooser();
-        chooser.addDefault("defaultCommand (Default)", defaultCommand);
-
+        chooser.addDefault("Default Auto", new DefaultAuto());
+        chooser.addObject("Left Turn Auto", new LeftFieldAuto());
+        chooser.addObject("Right Turn Auto", new RightFieldAuto());
         try {
 			SmartDashboard.putData("Auto mode", chooser);
 		} catch (Exception e) {
