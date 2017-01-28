@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,26 +29,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	
-	public static SmartDashboard dashboard = new SmartDashboard();
+	public static SmartDashboard dashboard;
 	
 	public static final double END_GAME_UP_SPEED = 1;
 	public static final double END_GAME_DOWN_SPEED = .5;
+	
+	public static final double GEAR_MECHANISM_LEFT_SPEED = 1;
+	public static final double GEAR_MECHANISM_RIGHT_SPEED = -1;
 	
 	private static final double DEADBAND = 0;
 	public static OI oi;
 
 	Command autonomousCommand1;
 	Command defaultCommand;
-	SendableChooser chooser;
-	public static DriveTrain driveTrain = new DriveTrain();
-	public static BoardingMechanism boardingMechanism = new BoardingMechanism();
-
+	SendableChooser<CommandGroup> chooser;
+	public static DriveTrain driveTrain;
+	public static BoardingMechanism boardingMechanism;
+	
     public Robot() {
-    	oi = new OI();
-    	robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);	// invert the left side motors
-    	robotDrive.setInvertedMotor(MotorType.kRearLeft, true);		// you may need to change or remove this to match your robot
-        robotDrive.setExpiration(0.1);
-        
+    	super();
     }
     public void operatorControl() {
         robotDrive.setSafetyEnabled(true);
@@ -68,6 +68,12 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
 		oi = new OI();
 		RobotMap.init();
+		dashboard = new SmartDashboard();
+		driveTrain = new DriveTrain();
+		boardingMechanism = new BoardingMechanism();
+	    RobotMap.robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);	// invert the left side motors
+	    RobotMap.robotDrive.setInvertedMotor(MotorType.kRearLeft, true);		// you may need to change or remove this to match your robot
+	    RobotMap.robotDrive.setExpiration(0.1);
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", new DefaultAuto());
         chooser.addObject("Left Turn Auto", new LeftFieldAuto());

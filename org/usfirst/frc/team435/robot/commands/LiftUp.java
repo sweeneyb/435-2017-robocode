@@ -14,7 +14,7 @@ public class LiftUp extends Command {
     public LiftUp(int speed, int time) {
         this.speed = speed;
         setTimeout(time);
-        requires(Robot.driveTrain);
+        requires(Robot.boardingMechanism);
     }
 
     // Called just before this Command runs the first time
