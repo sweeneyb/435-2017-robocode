@@ -28,11 +28,11 @@ public class RobotMap {
 	public static SpeedController endgame1Motor;
 	public static SpeedController endgame2Motor; 
 	
-	public static final int ENDGAME1_MOTOR = 0;
-	public static final int ENDGAME2_MOTOR = 1;
+	public static final int ENDGAME1_MOTOR = 8;
+	public static final int ENDGAME2_MOTOR = 7;
 	
-	public static final int GEAR_MECHANISM_LEFT_MOTOR = 2;
-	public static final int GEAR_MECHANISM_RIGHT_MOTOR = 3;
+	public static final int GEAR_MECHANISM_LEFT_MOTOR = 6;
+	public static final int GEAR_MECHANISM_RIGHT_MOTOR = 5;
 	
 	public static final int FRONT_LEFT_MOTOR = 4;       
 	public static final int FRONT_RIGHT_MOTOR = 2;

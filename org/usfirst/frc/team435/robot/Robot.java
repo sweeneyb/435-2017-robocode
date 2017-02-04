@@ -3,14 +3,20 @@ package org.usfirst.frc.team435.robot;
 
 import static org.usfirst.frc.team435.robot.RobotMap.robotDrive;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.usfirst.frc.team435.robot.Automodes.DefaultAuto;
 import org.usfirst.frc.team435.robot.Automodes.LeftFieldAuto;
 import org.usfirst.frc.team435.robot.Automodes.RightFieldAuto;
 import org.usfirst.frc.team435.robot.subsystems.BoardingMechanism;
 import org.usfirst.frc.team435.robot.subsystems.DriveTrain;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -38,16 +44,17 @@ public class Robot extends IterativeRobot {
 	public static final double GEAR_MECHANISM_RIGHT_SPEED = -1;
 	
 	private static final double DEADBAND = 0;
-	public static OI oi;
-
+	public  OI oi;
 	Command autonomousCommand1;
 	Command defaultCommand;
 	SendableChooser<CommandGroup> chooser;
+	ProcessBuilder pb;
+	Preferences preferences;
 	public static DriveTrain driveTrain;
 	public static BoardingMechanism boardingMechanism;
 	
     public Robot() {
-    	super();
+    //	super();
     }
     public void operatorControl() {
         robotDrive.setSafetyEnabled(true);
@@ -83,7 +90,37 @@ public class Robot extends IterativeRobot {
 		} catch (Exception e) {
 			DriverStation.reportError(e.getMessage(), true);
 		}
+        preferences = Preferences.getInstance();
+		
+
+     // May need another stream for the DS to watch (with normal brightness)
+     		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+     		try {
+     			camera.setResolution(preferences.getInt("res_width", 640), preferences.getInt("res_height", 480));
+     			camera.setFPS(preferences.getInt("fps", 5));
+     			camera.setBrightness(0);
+     			camera.setExposureManual(1);
+     			camera.setWhiteBalanceManual(4000);
+     		} catch (Throwable t) {
+     			DriverStation.reportError(t.getMessage(), true);
+     			t.printStackTrace();
+     		}
+ 
     }
+    public static void startVision(){
+ 		ProcessBuilder pb = new ProcessBuilder("bash","-c","kill $(ps -elf | grep vision | grep -v grep | awk '{print $1}'); rm -f /home/lvuser/vision.log* ; /home/lvuser/vision http://localhost:1181/stream.mjpg");
+ 		try {
+ 			pb.redirectErrorStream(true);
+ 		    pb.redirectOutput(new File("/home/lvuser/vision.log"));
+ 			pb.start();
+ 			
+ 		} catch (IOException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 			DriverStation.reportError(e.getMessage(), true);
+ 			
+ 		}
+ 	}
 	
 	/**
      * This function is called once each time the robot enters Disabled mode.
