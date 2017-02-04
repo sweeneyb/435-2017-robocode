@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class LiftUp extends Command {
 
-	private int speed;
+	private double speed;
 	
-    public LiftUp(int speed, int time) {
+    public LiftUp(double speed, double time) {
         this.speed = speed;
         setTimeout(time);
         requires(Robot.boardingMechanism);

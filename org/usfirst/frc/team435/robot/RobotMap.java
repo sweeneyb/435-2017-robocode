@@ -1,6 +1,8 @@
 package org.usfirst.frc.team435.robot;
 
 
+import org.usfirst.frc.team435.robot.subsystems.BoardingMechanism;
+
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Spark;
@@ -26,10 +28,11 @@ public class RobotMap {
 	
 	public static RobotDrive robotDrive;
 	public static SpeedController endgame1Motor;
-	public static SpeedController endgame2Motor; 
+	public static SpeedController endgame2Motor;
+	public static BoardingMechanism boardingMechanism;
 	
-	public static final int ENDGAME1_MOTOR = 8;
-	public static final int ENDGAME2_MOTOR = 7;
+	public static final int ENDGAME1_MOTOR = 0;
+	public static final int ENDGAME2_MOTOR = 1;
 	
 	public static final int GEAR_MECHANISM_LEFT_MOTOR = 6;
 	public static final int GEAR_MECHANISM_RIGHT_MOTOR = 5;
@@ -40,14 +43,15 @@ public class RobotMap {
 	public static final int BACK_RIGHT_MOTOR = 1;
 	
 	public static void init() {
-		endgame1Motor = new Talon(ENDGAME1_MOTOR);
-		endgame2Motor = new Talon(ENDGAME2_MOTOR);
-		gearMechanismLeftMotor = new Spark(GEAR_MECHANISM_LEFT_MOTOR);
-		gearMechanismRightMotor = new Spark(GEAR_MECHANISM_RIGHT_MOTOR);
+		endgame1Motor = new Spark(ENDGAME1_MOTOR);
+		endgame2Motor = new Spark(ENDGAME2_MOTOR);
+		gearMechanismLeftMotor = new Talon(GEAR_MECHANISM_LEFT_MOTOR);
+		gearMechanismRightMotor = new Talon(GEAR_MECHANISM_RIGHT_MOTOR);
 		frontLeftMotor = new CANTalon(FRONT_LEFT_MOTOR);
 		frontRightMotor = new CANTalon(FRONT_RIGHT_MOTOR);
 		backLeftMotor = new CANTalon(BACK_LEFT_MOTOR);
 		backRightMotor = new CANTalon(BACK_RIGHT_MOTOR);
 		robotDrive = new RobotDrive(frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor);
+		boardingMechanism = new BoardingMechanism(endgame1Motor, endgame2Motor);
 	}
 }

@@ -19,14 +19,13 @@ public class OI {
 	public JoystickButton endgameDownButton;
 	
 	
-	public static final int DRIVESTICK_PORT = 0;
+	public static final int DRIVESTICK_PORT = 1;
 	public static final int HALF_SPEED_BUTTON_ID = 1;
 	
-	public static final int SMO_STICK_PORT = 1;
-	public static final int GEAR_MECHANISM_OUT_ID = 2;
-	public static final int GEAR_MECHANISM_RESET_ID = 3;
-	public static final int ENDGAME_UP_ID = 4;
-	public static final int ENDGAME_DOWN_ID = 5;
+	public static final int SMO_STICK_PORT = 2;
+	public static final int GEAR_MECHANISM_OUT_ID = 1;
+	public static final int GEAR_MECHANISM_RESET_ID = 5;
+	public static final int ENDGAME_UP_ID = 3;
 	
 	public static final AxisType FORWARD_AXIS = AxisType.kY;
 	public static final AxisType STRAFE_AXIS = AxisType.kX;
@@ -42,7 +41,6 @@ public class OI {
 		gearMechanismOut = new JoystickButton(smoStick, GEAR_MECHANISM_OUT_ID);
 		gearMechanismReset = new JoystickButton(smoStick, GEAR_MECHANISM_RESET_ID);
 		endgameUpButton = new JoystickButton(smoStick, ENDGAME_UP_ID);
-		endgameDownButton = new JoystickButton(smoStick, ENDGAME_DOWN_ID);
 	
 	}
 	
