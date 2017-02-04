@@ -69,6 +69,10 @@ public class Vision extends CommandGroup {
         right_width_table = NetworkTable.getTable("right_width");
         left_width_table = NetworkTable.getTable("left_width");
         default_value = 218949832749289343323.21243234324;
+        last_left_x = default_value;
+        last_right_x = default_value;
+        last_left_width = default_value;
+        last_right_width = default_value;
         tolerance = 10;
     }
     public Boolean get_values() {
