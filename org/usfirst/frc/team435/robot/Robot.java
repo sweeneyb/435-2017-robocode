@@ -9,16 +9,18 @@ import java.io.IOException;
 import org.usfirst.frc.team435.robot.Automodes.DefaultAuto;
 import org.usfirst.frc.team435.robot.Automodes.LeftFieldAuto;
 import org.usfirst.frc.team435.robot.Automodes.RightFieldAuto;
+import org.usfirst.frc.team435.robot.commands.LiftUp;
 import org.usfirst.frc.team435.robot.subsystems.BoardingMechanism;
 import org.usfirst.frc.team435.robot.subsystems.DriveTrain;
-import org.usfirst.frc.team435.robot.subsystems.VisionRunnable;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -43,7 +45,7 @@ public class Robot extends IterativeRobot {
 	public static final double GEAR_MECHANISM_LEFT_SPEED = 1;
 	public static final double GEAR_MECHANISM_RIGHT_SPEED = -1;
 
-	private static final double DEADBAND = 0;
+	private static final double DEADBAND = 10;
 	public OI oi;
 	Command autonomousCommand1;
 	Command defaultCommand;
@@ -54,21 +56,29 @@ public class Robot extends IterativeRobot {
 	public static BoardingMechanism boardingMechanism;
 
 	public Robot() {
-		// super();
+		super();
 	}
 
 	public void operatorControl() {
 		robotDrive.setSafetyEnabled(true);
-		while (isOperatorControl() && isEnabled()) {
+		if (isOperatorControl() && isEnabled()) {
 
 			// Use the joystick X axis for lateral movement, Y axis for forward
 			// movement, and Z axis for rotation.
 			// This sample does not use field-oriented drive, so the gyro input
 			// is set to zero.
-			robotDrive.mecanumDrive_Cartesian(oi.driveStick.getAxis(OI.STRAFE_AXIS),
-					oi.driveStick.getAxis(OI.FORWARD_AXIS), oi.driveStick.getAxis(OI.TWIST_AXIS), 0);
+			robotDrive.mecanumDrive_Cartesian(calc(oi.driveStick.getAxis(OI.STRAFE_AXIS)),
+					calc(oi.driveStick.getAxis(OI.FORWARD_AXIS)), calc(oi.driveStick.getAxis(OI.TWIST_AXIS)), 0);
+			if (oi.smoStick.getRawButton(OI.ENDGAME_UP_ID)) {
+				// Scheduler.getInstance().add(new LiftUp(0.5, 0.5));
+				boardingMechanism.lift(1.0);
+				DriverStation.getInstance().reportWarning(oi.smoStick.getRawButton(OI.ENDGAME_UP_ID) + "", false);
+			} else {
+				boardingMechanism.lift(0.0);
+			}
+			RobotMap.boardingMechanism.set(oi.smoStick.getRawButton(OI.ENDGAME_UP_ID));
 
-			Timer.delay(0.005); // wait 5ms to avoid hogging CPU cycles
+			// Timer.delay(0.005); // wait 5ms to avoid hogging CPU cycles
 		}
 	}
 
@@ -76,12 +86,13 @@ public class Robot extends IterativeRobot {
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
+	@Override
 	public void robotInit() {
 		oi = new OI();
 		RobotMap.init();
 		dashboard = new SmartDashboard();
 		driveTrain = new DriveTrain();
-		boardingMechanism = new BoardingMechanism();
+		boardingMechanism = new BoardingMechanism(RobotMap.endgame1Motor, RobotMap.endgame2Motor);
 		RobotMap.robotDrive.setInvertedMotor(MotorType.kFrontLeft, true); // invert
 																			// the
 																			// left
@@ -111,6 +122,8 @@ public class Robot extends IterativeRobot {
 		}
 		preferences = Preferences.getInstance();
 
+		RobotMap.robotDrive.setSafetyEnabled(false);
+
 		// May need another stream for the DS to watch (with normal brightness)
 		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 		try {
@@ -123,8 +136,7 @@ public class Robot extends IterativeRobot {
 			DriverStation.reportError(t.getMessage(), true);
 			t.printStackTrace();
 		}
-		startVision();
-		new Thread (new VisionRunnable()).start();
+
 	}
 
 	public static void startVision() {
@@ -148,11 +160,12 @@ public class Robot extends IterativeRobot {
 	 * You can use it to reset any subsystem information you want to clear when
 	 * the robot is disabled.
 	 */
-
+	@Override
 	public void disabledInit() {
 
 	}
 
+	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
 	}
@@ -168,6 +181,7 @@ public class Robot extends IterativeRobot {
 	 * chooser code above (like the commented example) or additional comparisons
 	 * to the switch structure below with additional strings & commands.
 	 */
+	@Override
 	public void autonomousInit() {
 		autonomousCommand1 = (Command) chooser.getSelected();
 
@@ -186,10 +200,12 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during autonomous
 	 */
+	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 	}
 
+	@Override
 	public void teleopInit() {
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
@@ -202,13 +218,18 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during operator control
 	 */
+	@Override
 	public void teleopPeriodic() {
+		DriverStation.getInstance().reportWarning("in tele periodic", false);
 		Scheduler.getInstance().run();
+		operatorControl();
+
 	}
 
 	/**
 	 * This function is called periodically during test mode
 	 */
+	@Override
 	public void testPeriodic() {
 	}
 
