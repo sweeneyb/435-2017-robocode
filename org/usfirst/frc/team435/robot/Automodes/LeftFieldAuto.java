@@ -11,7 +11,6 @@ public class LeftFieldAuto extends CommandGroup {
 		addSequential(new DriveForward(.5, 5));
 		addSequential(new TurnLeft(-.5, .5));
 		/*Add vision tracking code here*/
-		new Vision();
 	}
 
 }

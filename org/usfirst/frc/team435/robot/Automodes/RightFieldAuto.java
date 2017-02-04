@@ -9,6 +9,5 @@ public class RightFieldAuto extends CommandGroup {
 		addSequential(new DriveForward(.5, 5));
 		addSequential(new TurnLeft(.5, .5));
 		/* start ring light, camera and vision tracking here */
-		new Vision();
 	}
 }
