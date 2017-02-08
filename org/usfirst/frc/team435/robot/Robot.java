@@ -6,22 +6,22 @@ import static org.usfirst.frc.team435.robot.RobotMap.robotDrive;
 import java.io.File;
 import java.io.IOException;
 
+import org.usfirst.frc.team435.robot.Automodes.CenterFieldAuto;
 import org.usfirst.frc.team435.robot.Automodes.DefaultAuto;
 import org.usfirst.frc.team435.robot.Automodes.LeftFieldAuto;
 import org.usfirst.frc.team435.robot.Automodes.RightFieldAuto;
-import org.usfirst.frc.team435.robot.commands.LiftUp;
 import org.usfirst.frc.team435.robot.subsystems.BoardingMechanism;
 import org.usfirst.frc.team435.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team435.robot.subsystems.VisionRunnable;
 
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -54,6 +54,9 @@ public class Robot extends IterativeRobot {
 	Preferences preferences;
 	public static DriveTrain driveTrain;
 	public static BoardingMechanism boardingMechanism;
+	public static DigitalInput floorSensor;
+	public static DigitalInput pegSensor;
+	public static ADXRS450_Gyro gyro;
 
 	public Robot() {
 		super();
@@ -93,28 +96,23 @@ public class Robot extends IterativeRobot {
 		dashboard = new SmartDashboard();
 		driveTrain = new DriveTrain();
 		boardingMechanism = new BoardingMechanism(RobotMap.endgame1Motor, RobotMap.endgame2Motor);
-		RobotMap.robotDrive.setInvertedMotor(MotorType.kFrontLeft, true); // invert
-																			// the
-																			// left
-																			// side
-																			// motors
-		RobotMap.robotDrive.setInvertedMotor(MotorType.kRearLeft, true); // you
-																			// may
-																			// need
-																			// to
-																			// change
-																			// or
-																			// remove
-																			// this
-																			// to
-																			// match
-																			// your
-																			// robot
-		RobotMap.robotDrive.setExpiration(0.1);
+		RobotMap.robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);
+		RobotMap.robotDrive.setInvertedMotor(MotorType.kRearLeft, true);
 		chooser = new SendableChooser();
 		chooser.addDefault("Default Auto", new DefaultAuto());
-		chooser.addObject("Left Turn Auto", new LeftFieldAuto());
-		chooser.addObject("Right Turn Auto", new RightFieldAuto());
+		chooser.addObject("Left Field Auto", new LeftFieldAuto());
+		chooser.addObject("Right Field Auto", new RightFieldAuto());
+		chooser.addObject("Center Field Auto", new CenterFieldAuto());
+		floorSensor = new DigitalInput(0);
+		pegSensor = new DigitalInput(1);
+		try {
+			gyro = new ADXRS450_Gyro();
+		}
+		catch(Throwable t) {
+			DriverStation.reportError(t.getMessage(), true);
+		}
+		
+
 		try {
 			SmartDashboard.putData("Auto mode", chooser);
 		} catch (Exception e) {
@@ -125,6 +123,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.robotDrive.setSafetyEnabled(false);
 
 		// May need another stream for the DS to watch (with normal brightness)
+		//Invoke vision code
 		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 		try {
 			camera.setResolution(preferences.getInt("res_width", 640), preferences.getInt("res_height", 480));
@@ -136,6 +135,7 @@ public class Robot extends IterativeRobot {
 			DriverStation.reportError(t.getMessage(), true);
 			t.printStackTrace();
 		}
+		new Thread(new VisionRunnable()).start();
 
 	}
 
