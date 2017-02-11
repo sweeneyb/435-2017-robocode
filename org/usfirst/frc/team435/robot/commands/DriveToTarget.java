@@ -1,8 +1,10 @@
 package org.usfirst.frc.team435.robot.commands;
 
 import org.usfirst.frc.team435.robot.Robot;
+import org.usfirst.frc.team435.robot.RobotMap;
 import org.usfirst.frc.team435.robot.subsystems.VisionRunnable;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -29,20 +31,21 @@ public class DriveToTarget extends Command {
 	//	} else
 		if (Math.abs(VisionRunnable.from_center) >= VisionRunnable.x_tolerance) {
 			if (((VisionRunnable.left_x + VisionRunnable.right_x) - VisionRunnable.res_width) < 0) {
-				new StrafeLeft(0.5, 0.1);
+				Robot.driveTrain.strafeLeft(0.5);
 			} else { /* > 0 */
-				new StrafeLeft(-0.5, 0.1);
+				Robot.driveTrain.strafeLeft(-0.5);
 			}
 		}
 		else {
-			new DriveForward(0.5, 0.1);
+			Robot.driveTrain.driveForward(.5);
 		}
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		if ((VisionRunnable.gap_width >= VisionRunnable.STOP_WIDTH)||(Robot.pegSensor.get()))
+		if ((VisionRunnable.gap_width >= VisionRunnable.STOP_WIDTH)||(!Robot.pegSensor.get()))
 			//Remember to check orientation for sensor if auto quits
+			//Also remember to take out ! when sensor is actually mounted
 			return true;
 		else
 			return false;
@@ -50,6 +53,7 @@ public class DriveToTarget extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
+		Robot.driveTrain.stop();
 	}
 
 	// Called when another command which requires one or more of the same

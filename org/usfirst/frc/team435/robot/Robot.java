@@ -45,7 +45,7 @@ public class Robot extends IterativeRobot {
 	public static final double GEAR_MECHANISM_LEFT_SPEED = 1;
 	public static final double GEAR_MECHANISM_RIGHT_SPEED = -1;
 
-	private static final double DEADBAND = 10;
+	private static final double DEADBAND = .1;
 	public OI oi;
 	Command autonomousCommand1;
 	Command defaultCommand;
@@ -71,11 +71,10 @@ public class Robot extends IterativeRobot {
 			// This sample does not use field-oriented drive, so the gyro input
 			// is set to zero.
 			robotDrive.mecanumDrive_Cartesian(calc(oi.driveStick.getAxis(OI.STRAFE_AXIS)),
-					calc(oi.driveStick.getAxis(OI.FORWARD_AXIS)), calc(oi.driveStick.getAxis(OI.TWIST_AXIS)), 0);
+					calc(oi.driveStick.getAxis(OI.FORWARD_AXIS)), -calc(oi.driveStick.getAxis(OI.TWIST_AXIS)), 0);
 			if (oi.smoStick.getRawButton(OI.ENDGAME_UP_ID)) {
 				// Scheduler.getInstance().add(new LiftUp(0.5, 0.5));
 				boardingMechanism.lift(1.0);
-				DriverStation.getInstance().reportWarning(oi.smoStick.getRawButton(OI.ENDGAME_UP_ID) + "", false);
 			} else {
 				boardingMechanism.lift(0.0);
 			}
@@ -135,6 +134,7 @@ public class Robot extends IterativeRobot {
 			DriverStation.reportError(t.getMessage(), true);
 			t.printStackTrace();
 		}
+		startVision();
 		new Thread(new VisionRunnable()).start();
 
 	}
@@ -183,10 +183,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand1 = (Command) chooser.getSelected();
+		autonomousCommand1 = chooser.getSelected();
 
 		try {
-			autonomousCommand1 = (Command) chooser.getSelected();
+			autonomousCommand1 = chooser.getSelected();
 		} catch (Exception e) {
 			autonomousCommand1 = defaultCommand;
 			DriverStation.reportError(e.getMessage(), true);
@@ -220,7 +220,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		DriverStation.getInstance().reportWarning("in tele periodic", false);
 		Scheduler.getInstance().run();
 		operatorControl();
 

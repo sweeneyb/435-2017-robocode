@@ -1,19 +1,13 @@
 package org.usfirst.frc.team435.robot.subsystems;
 
-import org.usfirst.frc.team435.robot.Robot;
 import org.usfirst.frc.team435.robot.RobotMap;
-import org.usfirst.frc.team435.robot.commands.DriveForward;
-import org.usfirst.frc.team435.robot.commands.StrafeLeft;
-import org.usfirst.frc.team435.robot.commands.TurnLeft;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionRunnable implements Runnable {
 
-	private SmartDashboard dashboard = Robot.dashboard;
 	private double default_value = 0;
 	public static double left_x;
 	public static double right_x;
@@ -22,10 +16,10 @@ public class VisionRunnable implements Runnable {
 	public static boolean isOnline = false;
 	public static final int res_width = 320;
 	public static int width_tolerance;
-	public static int x_tolerance;
+	public static double x_tolerance;
 	private Preferences preferences = Preferences.getInstance();
 	public static double gap_width;
-	public static double STOP_WIDTH; 
+	public static double STOP_WIDTH = 60; 
 
 	public static double lastFrame;
 	public static double width_delta; // Negative when left value is smaller, positive
@@ -39,16 +33,17 @@ public class VisionRunnable implements Runnable {
 			// TODO: This isn't quite right. You might come through the loop 2x
 			// before the camera puts up another frame.
 			// Left for the students to address.
-			if (dashboard.getNumber("frames_processed") == lastFrame) {
+			if (SmartDashboard.getNumber("frames_processed",-1) == lastFrame) {
 				isOnline = false;
 				SmartDashboard.putBoolean("VisionIsWorking", false);
 				DriverStation.reportError("stale vision tracking values", false);
 			} else {
-				lastFrame = dashboard.getNumber("frames_processed");
+				
 				isOnline = true;
 				SmartDashboard.putBoolean("VisionIsWorking", true);
 
 			}
+			lastFrame = SmartDashboard.getNumber("frames_processed",-1);
 			long fps = preferences.getLong("fps", 5);
 			long delay = 1000 / fps;
 			try {
@@ -58,23 +53,25 @@ public class VisionRunnable implements Runnable {
 				e.printStackTrace();
 			}
 			//No  better place, deal with it
-			dashboard.putDouble("fl", RobotMap.frontLeftMotor.get());
-			dashboard.putDouble("fr", RobotMap.frontRightMotor.get());
-			dashboard.putDouble("bl", RobotMap.backLeftMotor.get());
-			dashboard.putDouble("br", RobotMap.backRightMotor.get());
+			SmartDashboard.putNumber("fl", RobotMap.frontLeftMotor.get());
+			SmartDashboard.putNumber("fr", RobotMap.frontRightMotor.get());
+			SmartDashboard.putNumber("bl", RobotMap.backLeftMotor.get());
+			SmartDashboard.putNumber("br", RobotMap.backRightMotor.get());
 		}
 	}
 
 	public void get_values() {
-		int frameNumber = dashboard.getInt("frames_processed");
-		left_x = dashboard.getNumber("left_x", default_value);
-		right_x = dashboard.getNumber("right_x", default_value);
-		left_width = dashboard.getNumber("left_width", default_value);
-		right_width = dashboard.getNumber("right_width", default_value);
-		width_delta = (left_width - right_width);
-		from_center = (((left_x - right_x) / 2) - (res_width / 2));
+		left_x = SmartDashboard.getNumber("left_x", default_value);
+		right_x = SmartDashboard.getNumber("right_x", default_value);
+		left_width = SmartDashboard.getNumber("left_width", default_value);
+		right_width = SmartDashboard.getNumber("right_width", default_value);
+		width_delta = (right_width - left_width);
 		gap_width = (right_x - left_x);
+		from_center = ((((gap_width) / 2) + left_x) - (res_width / 2));
 		STOP_WIDTH = Preferences.getInstance().getDouble("stop_width", 100);
+		SmartDashboard.putNumber("From Center", from_center);
+		SmartDashboard.putNumber("Gap Width", gap_width);
+		x_tolerance = Preferences.getInstance().getDouble("x_tolerance", 20);
 		
 		// if ((left_x == default_value) || (right_x == default_value) ||
 		// (right_width == default_value)
