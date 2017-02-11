@@ -12,6 +12,7 @@ import org.usfirst.frc.team435.robot.Automodes.LeftFieldAuto;
 import org.usfirst.frc.team435.robot.Automodes.RightFieldAuto;
 import org.usfirst.frc.team435.robot.subsystems.BoardingMechanism;
 import org.usfirst.frc.team435.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team435.robot.subsystems.GearMechanism;
 import org.usfirst.frc.team435.robot.subsystems.VisionRunnable;
 
 import edu.wpi.cscore.UsbCamera;
@@ -53,7 +54,6 @@ public class Robot extends IterativeRobot {
 	ProcessBuilder pb;
 	Preferences preferences;
 	public static DriveTrain driveTrain;
-	public static BoardingMechanism boardingMechanism;
 	public static DigitalInput floorSensor;
 	public static DigitalInput pegSensor;
 	public static ADXRS450_Gyro gyro;
@@ -73,14 +73,23 @@ public class Robot extends IterativeRobot {
 			robotDrive.mecanumDrive_Cartesian(calc(oi.driveStick.getAxis(OI.STRAFE_AXIS)),
 					calc(oi.driveStick.getAxis(OI.FORWARD_AXIS)), -calc(oi.driveStick.getAxis(OI.TWIST_AXIS)), 0);
 			if (oi.smoStick.getRawButton(OI.ENDGAME_UP_ID)) {
-				// Scheduler.getInstance().add(new LiftUp(0.5, 0.5));
-				boardingMechanism.lift(1.0);
-			} else {
-				boardingMechanism.lift(0.0);
+			
+				RobotMap.boardingMechanism.lift(1.0);
+			} 
+			else {
+				RobotMap.boardingMechanism.lift(0.0);
 			}
-			RobotMap.boardingMechanism.set(oi.smoStick.getRawButton(OI.ENDGAME_UP_ID));
+			if (oi.gearMechanismEject.get()) {
+			
+				RobotMap.gearMechanism.eject();
+			} 
+			else if (oi.gearMechanismReset.get()) {
+				RobotMap.gearMechanism.reset();
+			}
+			else {
+				RobotMap.gearMechanism.stop();
+			}
 
-			// Timer.delay(0.005); // wait 5ms to avoid hogging CPU cycles
 		}
 	}
 
@@ -94,7 +103,6 @@ public class Robot extends IterativeRobot {
 		RobotMap.init();
 		dashboard = new SmartDashboard();
 		driveTrain = new DriveTrain();
-		boardingMechanism = new BoardingMechanism(RobotMap.endgame1Motor, RobotMap.endgame2Motor);
 		RobotMap.robotDrive.setInvertedMotor(MotorType.kFrontLeft, true);
 		RobotMap.robotDrive.setInvertedMotor(MotorType.kRearLeft, true);
 		chooser = new SendableChooser();

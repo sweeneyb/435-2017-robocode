@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class BoardingMechanism extends Subsystem {
 
-	public BoardingMechanism(SpeedController endgame1Motor, SpeedController endgame2Motor) {
+	public BoardingMechanism() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -22,9 +22,5 @@ public class BoardingMechanism extends Subsystem {
     public void initDefaultCommand() {
     }
 
-	public void set(boolean rawButton) {
-		// TODO Auto-generated method stub
-		
-	}
 }
 

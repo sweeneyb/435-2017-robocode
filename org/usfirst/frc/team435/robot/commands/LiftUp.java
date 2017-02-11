@@ -1,6 +1,6 @@
 package org.usfirst.frc.team435.robot.commands;
 
-import org.usfirst.frc.team435.robot.Robot;
+import org.usfirst.frc.team435.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -14,7 +14,7 @@ public class LiftUp extends Command {
     public LiftUp(double speed, double time) {
         this.speed = speed;
         setTimeout(time);
-        requires(Robot.boardingMechanism);
+        requires(RobotMap.boardingMechanism);
     }
 
     // Called just before this Command runs the first time
@@ -23,7 +23,7 @@ public class LiftUp extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.boardingMechanism.lift(speed);
+    	RobotMap.boardingMechanism.lift(speed);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -33,7 +33,7 @@ public class LiftUp extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.boardingMechanism.lift(0);
+    	RobotMap.boardingMechanism.lift(0);
     }
     
     @Override
