@@ -3,8 +3,6 @@ package org.usfirst.frc.team435.robot.commands;
 import org.usfirst.frc.team435.robot.Robot;
 import org.usfirst.frc.team435.robot.RobotMap;
 import org.usfirst.frc.team435.robot.subsystems.VisionRunnable;
-
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
