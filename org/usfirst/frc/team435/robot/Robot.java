@@ -13,9 +13,11 @@ import org.usfirst.frc.team435.robot.Automodes.RightFieldAuto;
 import org.usfirst.frc.team435.robot.subsystems.BoardingMechanism;
 import org.usfirst.frc.team435.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team435.robot.subsystems.GearMechanism;
+import org.usfirst.frc.team435.robot.subsystems.SafeGyro;
 import org.usfirst.frc.team435.robot.subsystems.VisionRunnable;
 
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -56,7 +58,8 @@ public class Robot extends IterativeRobot {
 	public static DriveTrain driveTrain;
 	public static DigitalInput floorSensor;
 	public static DigitalInput pegSensor;
-	public static ADXRS450_Gyro gyro;
+	public static SafeGyro gyro;
+	
 
 	public Robot() {
 		super();
@@ -113,7 +116,9 @@ public class Robot extends IterativeRobot {
 		floorSensor = new DigitalInput(0);
 		pegSensor = new DigitalInput(1);
 		try {
-			gyro = new ADXRS450_Gyro();
+			gyro = new SafeGyro();
+			gyro.calibrate();
+			gyro.reset();
 		}
 		catch(Throwable t) {
 			DriverStation.reportError(t.getMessage(), true);

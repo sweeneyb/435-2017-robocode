@@ -29,13 +29,13 @@ public class DriveToTarget extends Command {
 	//	} else
 		if (Math.abs(VisionRunnable.from_center) >= VisionRunnable.x_tolerance) {
 			if (((VisionRunnable.left_x + VisionRunnable.right_x) - VisionRunnable.res_width) < 0) {
-				Robot.driveTrain.strafeLeft(0.5);
+				Robot.driveTrain.strafeLeft(-0.25);
 			} else { /* > 0 */
-				Robot.driveTrain.strafeLeft(-0.5);
+				Robot.driveTrain.strafeLeft(0.25);
 			}
 		}
 		else {
-			Robot.driveTrain.driveForward(.5);
+			Robot.driveTrain.driveForward(.2);
 		}
 	}
 

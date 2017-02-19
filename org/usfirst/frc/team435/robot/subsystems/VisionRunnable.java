@@ -1,6 +1,9 @@
 package org.usfirst.frc.team435.robot.subsystems;
 
+import org.usfirst.frc.team435.robot.Robot;
 import org.usfirst.frc.team435.robot.RobotMap;
+
+import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
@@ -19,7 +22,7 @@ public class VisionRunnable implements Runnable {
 	public static double x_tolerance;
 	private Preferences preferences = Preferences.getInstance();
 	public static double gap_width;
-	public static double STOP_WIDTH = 60; 
+	public static double STOP_WIDTH = 115; 
 
 	public static double lastFrame;
 	public static double width_delta; // Negative when left value is smaller, positive
@@ -57,6 +60,11 @@ public class VisionRunnable implements Runnable {
 			SmartDashboard.putNumber("fr", RobotMap.frontRightMotor.get());
 			SmartDashboard.putNumber("bl", RobotMap.backLeftMotor.get());
 			SmartDashboard.putNumber("br", RobotMap.backRightMotor.get());
+			SmartDashboard.putNumber("fl", ((CANTalon)RobotMap.frontLeftMotor).getOutputCurrent());
+			SmartDashboard.putNumber("fr", ((CANTalon)RobotMap.frontRightMotor).getOutputCurrent());
+			SmartDashboard.putNumber("bl", ((CANTalon)RobotMap.backLeftMotor).getOutputCurrent());
+			SmartDashboard.putNumber("br", ((CANTalon)RobotMap.backRightMotor).getOutputCurrent());
+			SmartDashboard.putNumber("Gyro Angle", Robot.gyro.getAngle());
 		}
 	}
 
@@ -67,6 +75,7 @@ public class VisionRunnable implements Runnable {
 		right_width = SmartDashboard.getNumber("right_width", default_value);
 		width_delta = (right_width - left_width);
 		gap_width = (right_x - left_x);
+		double offset = Preferences.getInstance().getDouble("Offset", 10);
 		from_center = ((((gap_width) / 2) + left_x) - (res_width / 2));
 		STOP_WIDTH = Preferences.getInstance().getDouble("stop_width", 100);
 		SmartDashboard.putNumber("From Center", from_center);

@@ -15,20 +15,20 @@ public class GearMechanism extends Subsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 	public void eject() {
-		RobotMap.endgame1Motor.set(RobotMap.EJECT_SPEED);
-		RobotMap.endgame2Motor.set(RobotMap.EJECT_SPEED);
+		RobotMap.gearMechanismLeftMotor.set(RobotMap.EJECT_SPEED);
+		RobotMap.gearMechanismRightMotor.set(RobotMap.EJECT_SPEED);
 		SmartDashboard.putString("Gear Mechanism", "Eject");
 	}
 	
 	public void reset() {
-		RobotMap.endgame1Motor.set(-RobotMap.EJECT_SPEED);
-		RobotMap.endgame2Motor.set(-RobotMap.EJECT_SPEED);
+		RobotMap.gearMechanismLeftMotor.set(-RobotMap.EJECT_SPEED);
+		RobotMap.gearMechanismRightMotor.set(-RobotMap.EJECT_SPEED);
 		SmartDashboard.putString("Gear Mechanism", "Reset");
 	}
 		
 	public void stop() {
-		RobotMap.endgame1Motor.set(0);
-		RobotMap.endgame2Motor.set(0);
+		RobotMap.gearMechanismLeftMotor.set(0);
+		RobotMap.gearMechanismRightMotor.set(0);
 		SmartDashboard.putString("Gear Mechanism", "Stopped");
 	}
 	

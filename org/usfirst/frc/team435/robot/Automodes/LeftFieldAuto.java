@@ -9,7 +9,7 @@ public class LeftFieldAuto extends CommandGroup {
 		addSequential(new DriveForward(.5, 5));
 		addSequential(new TurnLeft(-.5, .5));
 		addSequential(new DriveToTarget());
-		/*Add vision tracking code here*/
+		addSequential(new DriveForward(.5, .1));
 		
 	}
 

@@ -12,14 +12,15 @@ public class GyroTurn extends Command {
     private double stop_angle;
 	private boolean is_left_turn;
 	private double TURN_SPEED = 0.33;
-
+	private double desired_angle;
 	public GyroTurn(double desired_angle, boolean is_left_turn) {
-       this.stop_angle = Robot.gyro.getAngle() - desired_angle;
        this.is_left_turn = is_left_turn;
+       this.desired_angle = desired_angle;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        this.stop_angle = Robot.gyro.getAngle() - desired_angle;
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -41,6 +42,7 @@ public class GyroTurn extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.driveTrain.stop();
     }
 
     // Called when another command which requires one or more of the same
