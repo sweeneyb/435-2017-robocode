@@ -196,6 +196,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		
+		RobotMap.robotDrive.setSafetyEnabled(false);
+		
 		autonomousCommand1 = chooser.getSelected();
 
 		try {

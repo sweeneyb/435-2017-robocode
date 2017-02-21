@@ -2,9 +2,7 @@ package org.usfirst.frc.team435.robot.subsystems;
 
 import org.usfirst.frc.team435.robot.Robot;
 import org.usfirst.frc.team435.robot.RobotMap;
-
 import com.ctre.CANTalon;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,7 +16,7 @@ public class VisionRunnable implements Runnable {
 	public static double right_width;
 	public static boolean isOnline = false;
 	public static final int res_width = 320;
-	public static int width_tolerance;
+	public static double width_tolerance;
 	public static double x_tolerance;
 	private Preferences preferences = Preferences.getInstance();
 	public static double gap_width;
@@ -76,15 +74,18 @@ public class VisionRunnable implements Runnable {
 		width_delta = (right_width - left_width);
 		gap_width = (right_x - left_x);
 		double offset = Preferences.getInstance().getDouble("Offset", 10);
-		from_center = ((((gap_width) / 2) + left_x) - (res_width / 2));
+		from_center = ((((gap_width) / 2) + left_x) - (res_width / 2)) - offset;
 		STOP_WIDTH = Preferences.getInstance().getDouble("stop_width", 100);
 		SmartDashboard.putNumber("From Center", from_center);
 		SmartDashboard.putNumber("Gap Width", gap_width);
 		x_tolerance = Preferences.getInstance().getDouble("x_tolerance", 20);
+		SmartDashboard.putBoolean("Floor Sensor", Robot.floorSensor.get());
+		SmartDashboard.putBoolean("Peg Sensor", Robot.pegSensor.get());
+		width_tolerance = Preferences.getInstance().getDouble("width_tolerance", 10);
 		
 		// if ((left_x == default_value) || (right_x == default_value) ||
 		// (right_width == default_value)
-		// || (left_width == default_value) || ((left_x == last_left_x) &&
+		// || (left_width == default_value) || ((left_x == last_left_x) && 
 		// (right_x == last_right_x)
 		// && (right_width == last_right_width) && (left_width ==
 		// last_left_width))) {

@@ -33,7 +33,7 @@ public class SafeGyro extends Subsystem implements Gyro {
 		catch(Throwable t) {
 			DriverStation.reportWarning(t.getMessage(), true);
 		}
-		if (gyro == null){
+		if (gyro == null || ((ADIS16448_IMU)gyro).getTemperature()==0.0){
 			try {
 				gyro = new ADXRS450_Gyro();
 			}

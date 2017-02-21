@@ -10,11 +10,17 @@ import edu.wpi.first.wpilibj.command.Command;
 public class DriveForward extends Command {
 
 	private double speed;
-	
+	private boolean stop_on_sensor = false;
     public DriveForward(double speed, double time) {
         this.speed = speed;
         setTimeout(time);
         requires(Robot.driveTrain);
+    }
+    public DriveForward(double speed, double time, boolean stop_on_sensor) {
+        this.speed = speed;
+        setTimeout(time);
+        requires(Robot.driveTrain);
+        this.stop_on_sensor = stop_on_sensor;
     }
 
     // Called just before this Command runs the first time
@@ -28,7 +34,17 @@ public class DriveForward extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return isTimedOut();
+        if (stop_on_sensor) {
+        	if (Robot.floorSensor.get() || isTimedOut()) {
+        		return true;
+        	}
+        	else {
+        		return false;
+        	}
+        }
+        else {
+        	return isTimedOut();
+        }
     }
 
     // Called once after isFinished returns true

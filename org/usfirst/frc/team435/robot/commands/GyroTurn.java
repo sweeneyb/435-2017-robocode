@@ -2,6 +2,7 @@ package org.usfirst.frc.team435.robot.commands;
 
 import org.usfirst.frc.team435.robot.Robot;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -11,7 +12,7 @@ public class GyroTurn extends Command {
 
     private double stop_angle;
 	private boolean is_left_turn;
-	private double TURN_SPEED = 0.33;
+	private double TURN_SPEED = 0.6;
 	private double desired_angle;
 	public GyroTurn(double desired_angle, boolean is_left_turn) {
        this.is_left_turn = is_left_turn;
@@ -20,7 +21,9 @@ public class GyroTurn extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.gyro.reset();
         this.stop_angle = Robot.gyro.getAngle() - desired_angle;
+        TURN_SPEED = Preferences.getInstance().getDouble("turn_speed", 0.6);
     }
 
     // Called repeatedly when this Command is scheduled to run

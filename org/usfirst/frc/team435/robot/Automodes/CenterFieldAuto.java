@@ -3,15 +3,18 @@ import org.usfirst.frc.team435.robot.commands.DriveForward;
 import org.usfirst.frc.team435.robot.commands.DriveToTarget;
 import org.usfirst.frc.team435.robot.commands.OperateGearMechanism;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-
 public class CenterFieldAuto extends CommandGroup {
-	
+
 	public  CenterFieldAuto() {
-		addSequential(new OperateGearMechanism(true, 0.2));
-		addSequential(new DriveForward(.5, .5));
+		
+		double drive_time = Preferences.getInstance().getDouble("center_drive_time", 1);
+		
+		addSequential(new OperateGearMechanism(false, 0.4));
+		addSequential(new DriveForward(.5, drive_time));
 		addSequential(new DriveToTarget());
-		addSequential(new DriveForward(.5, .1));
-		//Remember to write new one with just passing tape
+		addSequential(new DriveForward(.5, .2));
+		addSequential(new OperateGearMechanism(true, 0.4));
 	}
 }
