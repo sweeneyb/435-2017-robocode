@@ -12,10 +12,10 @@ public class RightFieldAuto extends CommandGroup {
 	public  RightFieldAuto() {
 		
 		double right_gyro_turn = Preferences.getInstance().getDouble("right_gyro_turn", 30);
-		double right_drive_time = Preferences.getInstance().getDouble("right_drive_time", 1);
+		double right_drive_time = Preferences.getInstance().getDouble("right_drive_time", 1.5);
 		
 		addSequential(new OperateGearMechanism(false, 0.4));
-		addSequential(new DriveForward(.5, right_drive_time, true));
+		addSequential(new DriveForward(.5, right_drive_time));
 		addSequential(new GyroTurn(right_gyro_turn, true));
 		addSequential(new DriveToTarget());
 		addSequential(new YawCorrection());

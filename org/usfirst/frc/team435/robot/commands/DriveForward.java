@@ -17,9 +17,7 @@ public class DriveForward extends Command {
         requires(Robot.driveTrain);
     }
     public DriveForward(double speed, double time, boolean stop_on_sensor) {
-        this.speed = speed;
-        setTimeout(time);
-        requires(Robot.driveTrain);
+        this(speed, time);
         this.stop_on_sensor = stop_on_sensor;
     }
 

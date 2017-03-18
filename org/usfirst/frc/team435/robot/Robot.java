@@ -253,7 +253,6 @@ public class Robot extends IterativeRobot {
 			return 0;
 		} else {
 			double expValue = (value - (Math.abs(value) / value * DEADBAND)) / (1 - DEADBAND);
-			DriverStation.reportError("Exponetial Value" + expValue, false);
 			return expValue * Math.abs(expValue);
 		}
 	}
