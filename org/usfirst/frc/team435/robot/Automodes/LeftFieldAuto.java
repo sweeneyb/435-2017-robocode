@@ -21,7 +21,6 @@ public class LeftFieldAuto extends CommandGroup {
 		addSequential(new DriveToTarget());
 		addSequential(new YawCorrection());
 		addSequential(new DriveForward(.5, .2));
-		addSequential(new OperateGearMechanism(true, 0.4));
 	}
 
 }
