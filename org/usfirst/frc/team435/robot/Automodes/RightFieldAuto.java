@@ -20,7 +20,5 @@ public class RightFieldAuto extends CommandGroup {
 		addSequential(new DriveToTarget());
 		addSequential(new YawCorrection());
 		addSequential(new DriveForward(.5, .1));
-		addSequential(new OperateGearMechanism(true, 0.4));
-		
 	}
 }

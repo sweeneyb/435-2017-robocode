@@ -16,5 +16,6 @@ public class CenterFieldAuto extends CommandGroup {
 		addSequential(new DriveToTarget());
 		addSequential(new DriveForward(.5, .2));
 		addSequential(new OperateGearMechanism(true, 0.4));
+		addSequential(new DriveForward(-.5, .2));
 	}
 }
