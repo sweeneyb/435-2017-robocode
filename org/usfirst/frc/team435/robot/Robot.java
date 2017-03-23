@@ -10,15 +10,11 @@ import org.usfirst.frc.team435.robot.Automodes.CenterFieldAuto;
 import org.usfirst.frc.team435.robot.Automodes.DefaultAuto;
 import org.usfirst.frc.team435.robot.Automodes.LeftFieldAuto;
 import org.usfirst.frc.team435.robot.Automodes.RightFieldAuto;
-import org.usfirst.frc.team435.robot.subsystems.BoardingMechanism;
 import org.usfirst.frc.team435.robot.subsystems.DriveTrain;
-import org.usfirst.frc.team435.robot.subsystems.GearMechanism;
 import org.usfirst.frc.team435.robot.subsystems.SafeGyro;
 import org.usfirst.frc.team435.robot.subsystems.VisionRunnable;
 
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoMode;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -59,7 +55,6 @@ public class Robot extends IterativeRobot {
 	public static DigitalInput floorSensor;
 	public static DigitalInput pegSensor;
 	public static SafeGyro gyro;
-	
 
 	public Robot() {
 		super();
@@ -76,20 +71,17 @@ public class Robot extends IterativeRobot {
 			robotDrive.mecanumDrive_Cartesian(calc(oi.driveStick.getAxis(OI.STRAFE_AXIS)),
 					calc(oi.driveStick.getAxis(OI.FORWARD_AXIS)), -calc(oi.driveStick.getAxis(OI.TWIST_AXIS)), 0);
 			if (oi.smoStick.getRawButton(OI.ENDGAME_UP_ID)) {
-			
+
 				RobotMap.boardingMechanism.lift(1.0);
-			} 
-			else {
+			} else {
 				RobotMap.boardingMechanism.lift(0.0);
 			}
 			if (oi.gearMechanismEject.get()) {
-			
+
 				RobotMap.gearMechanism.eject();
-			} 
-			else if (oi.gearMechanismReset.get()) {
+			} else if (oi.gearMechanismReset.get()) {
 				RobotMap.gearMechanism.reset();
-			}
-			else {
+			} else {
 				RobotMap.gearMechanism.stop();
 			}
 
@@ -119,11 +111,9 @@ public class Robot extends IterativeRobot {
 			gyro = new SafeGyro();
 			gyro.calibrate();
 			gyro.reset();
-		}
-		catch(Throwable t) {
+		} catch (Throwable t) {
 			DriverStation.reportError(t.getMessage(), true);
 		}
-		
 
 		try {
 			SmartDashboard.putData("Auto mode", chooser);
@@ -135,17 +125,23 @@ public class Robot extends IterativeRobot {
 		RobotMap.robotDrive.setSafetyEnabled(false);
 
 		// May need another stream for the DS to watch (with normal brightness)
-		//Invoke vision code
-		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-		try {
-			camera.setResolution(preferences.getInt("res_width", 640), preferences.getInt("res_height", 480));
-			camera.setFPS(preferences.getInt("fps", 5));
-			camera.setBrightness(0);
-			camera.setExposureManual(1);
-			camera.setWhiteBalanceManual(4000);
-		} catch (Throwable t) {
-			DriverStation.reportError(t.getMessage(), true);
-			t.printStackTrace();
+		// Invoke vision code
+		int cameraCount = 2;
+		UsbCamera[] cameras = new UsbCamera[cameraCount];
+		for (int i = 0; i < cameraCount; i++) {
+			cameras[i] = CameraServer.getInstance().startAutomaticCapture(i);
+		}
+		for (int i = 0; i < cameraCount; i++) {
+			try {
+				cameras[i].setResolution(preferences.getInt("res_width", 640), preferences.getInt("res_height", 480));
+				cameras[i].setFPS(preferences.getInt("fps", 5));
+				cameras[i].setBrightness(0);
+				cameras[i].setExposureManual(1);
+				cameras[i].setWhiteBalanceManual(4000);
+			} catch (Throwable t) {
+				DriverStation.reportError(t.getMessage(), true);
+				t.printStackTrace();
+			}
 		}
 		startVision();
 		new Thread(new VisionRunnable()).start();
@@ -196,9 +192,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		
+
 		RobotMap.robotDrive.setSafetyEnabled(false);
-		
+
 		autonomousCommand1 = chooser.getSelected();
 
 		try {
