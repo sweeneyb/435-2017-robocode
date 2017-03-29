@@ -17,7 +17,7 @@ public class LeftFieldAuto extends CommandGroup {
 		addSequential(new DriveForward(.5, left_drive_time));
 		addSequential(new GyroTurn(left_gyro_turn, false));
 
-		addSequential(new DriveForward(.5, .2));
+		addSequential(new DriveForward(.5, left_drive_time_after_turn));
 	}
 
 }
