@@ -3,8 +3,6 @@ import org.usfirst.frc.team435.robot.commands.DriveForward;
 import org.usfirst.frc.team435.robot.commands.DriveToTarget;
 import org.usfirst.frc.team435.robot.commands.GyroTurn;
 import org.usfirst.frc.team435.robot.commands.OperateGearMechanism;
-import org.usfirst.frc.team435.robot.commands.TurnLeft;
-import org.usfirst.frc.team435.robot.commands.YawCorrection;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -19,9 +17,8 @@ public class LeftFieldAuto extends CommandGroup {
 		addSequential(new DriveForward(.5, left_drive_time));
 		addSequential(new GyroTurn(left_gyro_turn, false));
 		addSequential(new DriveToTarget());
-		addSequential(new YawCorrection());
+		// addSequential(new YawCorrection());
 		addSequential(new DriveForward(.5, .2));
-		addSequential(new OperateGearMechanism(true, 0.4));
 	}
 
 }

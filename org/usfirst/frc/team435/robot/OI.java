@@ -12,7 +12,7 @@ public class OI {
 	public Joystick smoStick;
 	public Joystick driveStick;
 	
-	public JoystickButton halfSpeedButton;
+	public JoystickButton boostSpeedButton;
 	public JoystickButton gearMechanismEject;
 	public JoystickButton gearMechanismReset;
 	public JoystickButton endgameUpButton;
@@ -20,7 +20,7 @@ public class OI {
 	
 	
 	public static final int DRIVESTICK_PORT = 1;
-	public static final int HALF_SPEED_BUTTON_ID = 1;
+	public static final int BOOST_SPEED_BUTTON_ID = 1;
 	
 	public static final int SMO_STICK_PORT = 2;
 	public static final int GEAR_MECHANISM_EJECT_ID = 1;
@@ -37,7 +37,7 @@ public class OI {
 		driveStick = new Joystick(DRIVESTICK_PORT);
 		smoStick = new Joystick(SMO_STICK_PORT);
 		
-		halfSpeedButton = new JoystickButton(driveStick, HALF_SPEED_BUTTON_ID);
+		boostSpeedButton = new JoystickButton(driveStick, BOOST_SPEED_BUTTON_ID);
 		gearMechanismEject = new JoystickButton(smoStick, GEAR_MECHANISM_EJECT_ID);
 		gearMechanismReset = new JoystickButton(smoStick, GEAR_MECHANISM_RESET_ID);
 		endgameUpButton = new JoystickButton(smoStick, ENDGAME_UP_ID);
