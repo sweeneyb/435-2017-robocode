@@ -15,10 +15,7 @@ public class RightFieldAuto extends CommandGroup {
 		addSequential(new OperateGearMechanism(false, 0.4));
 		addSequential(new DriveForward(.5, right_drive_time));
 		addSequential(new GyroTurn(right_gyro_turn, true));
-		// addSequential(new DriveToTarget());
-		// addSequential(new YawCorrection());
 
 		addSequential(new DriveForward(.5, right_drive_time_after_turn));
-		// addSequential(new DriveForward(-.5, .2));
 	}
 }
